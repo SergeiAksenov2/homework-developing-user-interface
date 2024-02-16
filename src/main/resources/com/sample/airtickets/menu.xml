@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <menu-config xmlns="http://jmix.io/schema/ui/menu">
 
-    <menu id="application" caption="msg://com.sample.airtickets/menu.application" insertBefore="administration">
+    <menu id="referenceData" caption="msg://com.sample.airtickets/menu_config.referenceData" icon="font-icon:DATABASE">
+        <item screen="Airline.browse" caption="msg://com.sample.airtickets.screen.airline/airlineBrowse.menu"/>
+        <item screen="Airport.browse" caption="msg://com.sample.airtickets.screen.airport/airportBrowse.menu"/>
+    </menu>
+    <menu id="application" caption="msg://com.sample.airtickets/menu.application"/>
+    <menu id="administration">
         <item screen="User.browse" caption="msg://com.sample.airtickets.screen.user/UserBrowse.caption"/>
         <item screen="themeSettingsScreen" caption="msg://io.jmix.ui.app.themesettings/themeSettings.caption"/>
+        <item screen="ui_JmxConsoleScreen"/>
+        <item screen="sys_LockInfo.browse"/>
+        <item screen="sec_ResourceRoleModel.browse"
+              caption="msg://io.jmix.securityui/menu.sec_ResourceRoleModel.browse"/>
+        <item screen="sec_RowLevelRoleModel.browse"
+              caption="msg://io.jmix.securityui/menu.sec_RowLevelRoleModel.browse"/>
+        <item screen="entityInspector.browse"/>
     </menu>
 
 </menu-config>
