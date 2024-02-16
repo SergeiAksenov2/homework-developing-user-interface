@@ -4,6 +4,16 @@
         caption="msg://flightBrowse.caption"
         focusComponent="flightsTable">
     <data readOnly="true">
+
+        <collection id="airportsDc" class="com.sample.airtickets.entity.Airport">
+            <fetchPlan extends="_base"/>
+            <loader id="airportsDl">
+                <query>
+                    <![CDATA[select e from Airport e]]>
+                </query>
+            </loader>
+        </collection>
+
         <collection id="flightsDc"
                     class="com.sample.airtickets.entity.Flight">
             <fetchPlan extends="_base">
@@ -17,6 +27,7 @@
                 </query>
             </loader>
         </collection>
+
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -35,10 +46,17 @@
     <dialogMode height="600"
                 width="800"/>
     <layout expand="flightsTable" spacing="true">
-        <filter id="filter"
-                dataLoader="flightsDl">
-            <properties include=".*"/>
-        </filter>
+        <groupBox caption="Search"
+                  orientation="horizontal"
+                  spacing="true"
+                  width="AUTO"
+                  height="AUTO">
+            <entityComboBox id="airportSelector"
+                            caption="Airport"
+                            optionsContainer="airportsDc"/>
+            <dateField id="takeOffFrom" caption="Take off from"/>
+            <dateField id="takeOffTo" caption="Take off to"/>
+        </groupBox>
         <groupTable id="flightsTable"
                     width="100%"
                     dataContainer="flightsDc">
