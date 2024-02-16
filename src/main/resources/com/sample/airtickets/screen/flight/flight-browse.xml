@@ -24,13 +24,37 @@
             <loader id="flightsDl">
                 <query>
                     <![CDATA[select e from Flight e]]>
+                    <condition>
+                        <and>
+                            <c:jpql>
+                                <c:where>e.fromAirport = :airportSelector1</c:where>
+                            </c:jpql>
+                            <c:jpql>
+                                <c:where>e.takeOffDate >= :wewe</c:where>
+                            </c:jpql>
+<!--                            <c:jpql>-->
+<!--                                <c:where>e.takeOffDate = :takeOffTo</c:where>-->
+<!--                            </c:jpql>-->
+                        </and>
+                    </condition>
                 </query>
             </loader>
         </collection>
 
     </data>
     <facets>
-        <dataLoadCoordinator auto="true"/>
+        <dataLoadCoordinator auto="true">
+            <refresh loader="flightsDl">
+                <onComponentValueChanged component="airportSelector"
+                                         likeClause="CASE_INSENSITIVE"
+                param="airportSelector1"/>
+                <onComponentValueChanged component="takeOffFrom"
+                                param="wewe"/>
+<!--                <onContainerItemChanged container="takeOffTo"-->
+<!--                                        param="takeOffTo"/>-->
+            </refresh>
+        </dataLoadCoordinator>
+
         <screenSettings id="settingsFacet" auto="true"/>
     </facets>
     <actions>
@@ -46,6 +70,7 @@
     <dialogMode height="600"
                 width="800"/>
     <layout expand="flightsTable" spacing="true">
+
         <groupBox caption="Search"
                   orientation="horizontal"
                   spacing="true"
@@ -54,9 +79,10 @@
             <entityComboBox id="airportSelector"
                             caption="Airport"
                             optionsContainer="airportsDc"/>
-            <dateField id="takeOffFrom" caption="Take off from"/>
-            <dateField id="takeOffTo" caption="Take off to"/>
+            <dateField id="takeOffFrom" caption="Take off from" datatype="offsetDateTime"/>
+            <dateField id="takeOffTo" caption="Take off to" datatype="offsetDateTime"/>
         </groupBox>
+
         <groupTable id="flightsTable"
                     width="100%"
                     dataContainer="flightsDc">
