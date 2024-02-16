@@ -26,8 +26,8 @@
         <action id="save" icon="OK" caption="msg:///actions.Ok" shortcut="CTRL-ENTER"/>
         <action id="cancel" icon="CANCEL" caption="msg:///actions.Cancel" description="Esc"/>
     </actions>
-    <dialogMode height="600"
-                width="800"/>
+    <dialogMode height="AUTO"
+                width="AUTO"/>
     <layout>
         <split id="split" height="100%" orientation="horizontal" reversePosition="true" width="100%">
             <vbox id="lookupBox" expand="table" height="100%" margin="false,true,false,false" spacing="true">

@@ -12,6 +12,9 @@
             </fetchPlan>
             <loader/>
         </instance>
+        <instance id="airlineDc" class="com.sample.airtickets.entity.Airline">
+            <fetchPlan extends="_base"/>
+        </instance>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -33,12 +36,21 @@
             <form id="form" dataContainer="flightDc">
                 <column width="350px">
                     <textField id="numberField" property="number"/>
-                    <entityPicker id="airlineField" property="airline">
+                    <entitySuggestionField id="flightDl"
+                                           dataContainer="flightDc"
+                                           property="airline"
+                                           minSearchStringLength="2">
+                        <query entityClass="com.sample.airtickets.entity.Airline"
+                               searchStringFormat="%${searchString}%"
+                               escapeValueForLike="true"
+                               fetchPlan="_base">
+                            <![CDATA[select e from Airline e where lower(e.name) like lower(:searchString) escape '\']]>
+                        </query>
                         <actions>
                             <action id="entityLookup" type="entity_lookup"/>
                             <action id="entityClear" type="entity_clear"/>
                         </actions>
-                    </entityPicker>
+                    </entitySuggestionField>
                     <dateField id="takeOffDateField" property="takeOffDate"/>
                 </column>
                 <column width="350px">
