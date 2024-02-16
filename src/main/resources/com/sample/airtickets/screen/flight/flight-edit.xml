@@ -31,16 +31,16 @@
     <layout spacing="true" expand="editActions">
         <hbox spacing="true">
             <form id="form" dataContainer="flightDc">
-                    <column width="350px">
-                        <textField id="numberField" property="number"/>
-                        <entityPicker id="airlineField" property="airline">
-                            <actions>
-                                <action id="entityLookup" type="entity_lookup"/>
-                                <action id="entityClear" type="entity_clear"/>
-                            </actions>
-                        </entityPicker>
-                        <dateField id="takeOffDateField" property="takeOffDate"/>
-                    </column>
+                <column width="350px">
+                    <textField id="numberField" property="number"/>
+                    <entityPicker id="airlineField" property="airline">
+                        <actions>
+                            <action id="entityLookup" type="entity_lookup"/>
+                            <action id="entityClear" type="entity_clear"/>
+                        </actions>
+                    </entityPicker>
+                    <dateField id="takeOffDateField" property="takeOffDate"/>
+                </column>
                 <column width="350px">
                     <entityPicker id="fromAirportField" property="fromAirport">
                         <actions>
