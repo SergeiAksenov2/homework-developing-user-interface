@@ -25,7 +25,7 @@
                     <condition>
                         <and>
                             <c:jpql>
-                                <c:where>e.fromAirport = :airportSelector1</c:where>
+                                <c:where>e.fromAirport = :airportSelectorParameter</c:where>
                             </c:jpql>
                             <c:jpql>
                                 <c:where>e.takeOffDate >= :takeOffFromParameter</c:where>
@@ -44,7 +44,7 @@
             <refresh loader="flightsDl">
                 <onComponentValueChanged component="airportSelector"
                                          likeClause="CASE_INSENSITIVE"
-                                         param="airportSelector1"/>
+                                         param="airportSelectorParameter"/>
                 <onComponentValueChanged component="takeOffFrom"
                                          param="takeOffFromParameter"/>
                 <onComponentValueChanged component="takeOffTo"
