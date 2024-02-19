@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        xmlns:c="http://jmix.io/schema/ui/jpql-condition"
+        caption="msg://ticketBrowse.caption"
+        focusComponent="ticketsTable">
+    <data readOnly="true">
+        <collection id="ticketsDc"
+                    class="com.sample.airtickets.entity.Ticket">
+            <fetchPlan extends="_base">
+                <property name="flight" fetchPlan="_base">
+                    <property name="fromAirport" fetchPlan="_instance_name"/>
+                    <property name="toAirport" fetchPlan="_instance_name"/>
+                    <property name="airline" fetchPlan="_instance_name"/>
+                    <property name="id"/>
+                </property>
+            </fetchPlan>
+            <instance id="flightDc" property="flight"/>
+            <loader id="ticketsDl">
+                <query>
+                    <![CDATA[select e from Ticket e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <screenSettings id="settingsFacet" auto="true"/>
+    </facets>
+    <actions>
+        <action id="lookupSelectAction"
+                caption="msg:///actions.Select"
+                icon="LOOKUP_OK"
+                primary="true"
+                shortcut="${COMMIT_SHORTCUT}"/>
+        <action id="lookupCancelAction"
+                caption="msg:///actions.Cancel"
+                icon="LOOKUP_CANCEL"/>
+    </actions>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="ticketsTable" spacing="true">
+        <groupTable id="ticketsTable"
+                    width="100%"
+                    dataContainer="ticketsDc">
+            <actions>
+            </actions>
+            <columns>
+                <column id="reservationId"/>
+                <column id="passportNumber"/>
+                <column id="passengerName"/>
+                <column id="telephone"/>
+                <column id="flight.number"/>
+                <column id="flight.id"/>
+                <column id="flight.airline"/>
+                <column id="flight.fromAirport"/>
+                <column id="flight.toAirport"/>
+                <column id="flight.takeOffDate"/>
+            </columns>
+            <simplePagination/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+            </buttonsPanel>
+        </groupTable>
+        <hbox id="lookupActions" spacing="true" visible="false">
+            <button action="lookupSelectAction"/>
+            <button action="lookupCancelAction"/>
+        </hbox>
+    </layout>
+</window>

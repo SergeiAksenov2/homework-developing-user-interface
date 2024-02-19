@@ -6,6 +6,7 @@
         <item screen="Airline.browse" caption="msg://com.sample.airtickets.screen.airline/airlineBrowse.menu"/>
         <item screen="Airport.browse" caption="msg://com.sample.airtickets.screen.airport/airportBrowse.menu"/>
         <item screen="Flight.browse" caption="msg://com.sample.airtickets.screen.flight/flightBrowse.menu"/>
+        <item screen="Ticket.browse" caption="msg://com.sample.airtickets.screen.ticket/ticketBrowse.menu"/>
     </menu>
     <menu id="application" caption="msg://com.sample.airtickets/menu.application">
     </menu>
