@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        caption="msg://ticketReservation.caption">
+    <data readOnly="true">
+        <collection id="airportsDc" class="com.sample.airtickets.entity.Airport">
+            <fetchPlan extends="_base"/>
+            <loader id="airportsDl">
+                <query>
+                    <![CDATA[select e from Airport e]]>
+                </query>
+            </loader>
+        </collection>
+
+        <collection id="flightsDc"
+                    class="com.sample.airtickets.entity.Flight">
+            <loader id="flightsTableDl"/>
+        </collection>
+
+    </data>
+
+    <actions>
+        <action id="ticketSearch"/>
+    </actions>
+
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <screenSettings id="settingsFacet" auto="true"/>
+    </facets>
+
+    <layout expand="ticketReservationTable" spacing="true">
+        <groupBox caption="Filter"
+                  orientation="horizontal"
+                  spacing="true"
+                  width="AUTO"
+                  height="AUTO">
+            <entityComboBox id="airportFromSelector"
+                            caption="From"
+                            optionsContainer="airportsDc"/>
+            <entityComboBox id="airportToSelector"
+                            caption="To"
+                            optionsContainer="airportsDc"/>
+            <dateField id="takeOffDateSelector"
+                       caption="Take off from"
+                       datatype="localDate"
+                       resolution="DAY"/>
+            <button id="ticketSearchBtn" caption="Search" action="ticketSearch"/>
+        </groupBox>
+
+        <table id="ticketReservationTable"
+               dataContainer="flightsDc"
+               width="100%">
+            <columns>
+                <column id="number"/>
+                <column id="fromAirport"/>
+                <column id="toAirport"/>
+                <column id="airline"/>
+                <column id="takeOffDate"/>
+            </columns>
+        </table>
+
+    </layout>
+</window>
