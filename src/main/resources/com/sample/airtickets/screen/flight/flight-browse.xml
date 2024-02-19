@@ -4,7 +4,6 @@
         caption="msg://flightBrowse.caption"
         focusComponent="flightsTable">
     <data readOnly="true">
-
         <collection id="airportsDc" class="com.sample.airtickets.entity.Airport">
             <fetchPlan extends="_base"/>
             <loader id="airportsDl">
@@ -13,7 +12,6 @@
                 </query>
             </loader>
         </collection>
-
         <collection id="flightsDc"
                     class="com.sample.airtickets.entity.Flight">
             <fetchPlan extends="_base">
@@ -30,31 +28,29 @@
                                 <c:where>e.fromAirport = :airportSelector1</c:where>
                             </c:jpql>
                             <c:jpql>
-                                <c:where>e.takeOffDate >= :wewe</c:where>
+                                <c:where>e.takeOffDate >= :takeOffFromParameter</c:where>
                             </c:jpql>
-<!--                            <c:jpql>-->
-<!--                                <c:where>e.takeOffDate = :takeOffTo</c:where>-->
-<!--                            </c:jpql>-->
+                            <c:jpql>
+                                <c:where>:takeOffToParameter > e.takeOffDate</c:where>
+                            </c:jpql>
                         </and>
                     </condition>
                 </query>
             </loader>
         </collection>
-
     </data>
     <facets>
         <dataLoadCoordinator auto="true">
             <refresh loader="flightsDl">
                 <onComponentValueChanged component="airportSelector"
                                          likeClause="CASE_INSENSITIVE"
-                param="airportSelector1"/>
+                                         param="airportSelector1"/>
                 <onComponentValueChanged component="takeOffFrom"
-                                param="wewe"/>
-<!--                <onContainerItemChanged container="takeOffTo"-->
-<!--                                        param="takeOffTo"/>-->
+                                         param="takeOffFromParameter"/>
+                <onComponentValueChanged component="takeOffTo"
+                                         param="takeOffToParameter"/>
             </refresh>
         </dataLoadCoordinator>
-
         <screenSettings id="settingsFacet" auto="true"/>
     </facets>
     <actions>
@@ -70,7 +66,6 @@
     <dialogMode height="600"
                 width="800"/>
     <layout expand="flightsTable" spacing="true">
-
         <groupBox caption="Search"
                   orientation="horizontal"
                   spacing="true"
@@ -82,7 +77,6 @@
             <dateField id="takeOffFrom" caption="Take off from" datatype="offsetDateTime"/>
             <dateField id="takeOffTo" caption="Take off to" datatype="offsetDateTime"/>
         </groupBox>
-
         <groupTable id="flightsTable"
                     width="100%"
                     dataContainer="flightsDc">
