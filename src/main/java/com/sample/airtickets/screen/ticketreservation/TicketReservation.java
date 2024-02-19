@@ -48,21 +48,14 @@ public class TicketReservation extends Screen {
             flightsDc.setItems(Collections.emptyList());
             showNotification();
         } else {
-            BackgroundTask<Integer, List<Flight>> getFlightsTask = new FlightsTask(airportFromSelector, airportToSelector, takeOffDateSelector);
-            BackgroundTaskHandler<List<Flight>> handle = backgroundWorker.handle(getFlightsTask);
-            handle.execute();
-            List<Flight> result = handle.getResult();
-            flightsDc.setItems(result);
+            flightsDc.setItems(getFlightsByBackgroundWorker());
         }
     }
 
     @Install(to = "flightsTableDl", target = Target.DATA_LOADER)
     private List<Flight> flightsTableDlLoadDelegate(final LoadContext<Flight> loadContext) {
         if (airportFromSelector.getValue() != null || airportToSelector.getValue() != null || takeOffDateSelector.getValue() != null) {
-            BackgroundTask<Integer, List<Flight>> getFlightsTask = new FlightsTask(airportFromSelector, airportToSelector, takeOffDateSelector);
-            BackgroundTaskHandler<List<Flight>> handle = backgroundWorker.handle(getFlightsTask);
-            handle.execute();
-            return handle.getResult();
+            return getFlightsByBackgroundWorker();
         }
         //showNotification();
         return Collections.emptyList();
@@ -73,6 +66,13 @@ public class TicketReservation extends Screen {
                 .withType(Notifications.NotificationType.WARNING)
                 .withDescription("Please fill at least one filter field")
                 .show();
+    }
+
+    private List<Flight> getFlightsByBackgroundWorker() {
+        BackgroundTask<Integer, List<Flight>> getFlightsTask = new FlightsTask(airportFromSelector, airportToSelector, takeOffDateSelector);
+        BackgroundTaskHandler<List<Flight>> handle = backgroundWorker.handle(getFlightsTask);
+        handle.execute();
+        return handle.getResult();
     }
 
     // Simple way
