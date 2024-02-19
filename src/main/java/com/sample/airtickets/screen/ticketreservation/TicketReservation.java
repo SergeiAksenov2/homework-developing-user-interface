@@ -4,6 +4,7 @@ import com.sample.airtickets.app.TicketService;
 import com.sample.airtickets.entity.Airport;
 import com.sample.airtickets.entity.Flight;
 import io.jmix.core.LoadContext;
+import io.jmix.ui.Dialogs;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.action.Action;
 import io.jmix.ui.component.DateField;
@@ -38,9 +39,10 @@ public class TicketReservation extends Screen {
     private CollectionContainer<Flight> flightsDc;
     @Autowired
     private Notifications notifications;
-
     @Autowired
     private BackgroundWorker backgroundWorker;
+    @Autowired
+    private Dialogs dialogs;
 
     @Subscribe("ticketSearch")
     public void onTicketSearch(final Action.ActionPerformedEvent event) {
@@ -48,14 +50,14 @@ public class TicketReservation extends Screen {
             flightsDc.setItems(Collections.emptyList());
             showNotification();
         } else {
-            flightsDc.setItems(getFlightsByBackgroundWorker());
+            getFlightsByBackgroundWorker();
         }
     }
 
     @Install(to = "flightsTableDl", target = Target.DATA_LOADER)
     private List<Flight> flightsTableDlLoadDelegate(final LoadContext<Flight> loadContext) {
         if (airportFromSelector.getValue() != null || airportToSelector.getValue() != null || takeOffDateSelector.getValue() != null) {
-            return getFlightsByBackgroundWorker();
+            getFlightsByBackgroundWorker();
         }
         //showNotification();
         return Collections.emptyList();
@@ -68,16 +70,16 @@ public class TicketReservation extends Screen {
                 .show();
     }
 
-    private List<Flight> getFlightsByBackgroundWorker() {
+    private void getFlightsByBackgroundWorker() {
         BackgroundTask<Integer, List<Flight>> getFlightsTask = new FlightsTask(airportFromSelector, airportToSelector, takeOffDateSelector);
         BackgroundTaskHandler<List<Flight>> handle = backgroundWorker.handle(getFlightsTask);
-        handle.execute();
-        return handle.getResult();
-    }
-
-    // Simple way
-    private List<Flight> getFlights_(EntityComboBox<Airport> airportFromSelector, EntityComboBox<Airport> airportToSelector, DateField<LocalDate> takeOffDateSelector) {
-        return ticketService.searchFlights(airportFromSelector.getValue(), airportToSelector.getValue(), takeOffDateSelector.getValue());
+        dialogs.createBackgroundWorkDialog(this, getFlightsTask)
+                .withCaption("Getting Flight Tasks")
+                .withMessage("Please wait until the Flight Tasks are received")
+                .withTotal(1)
+                .withShowProgressInPercentage(true)
+                .withCancelAllowed(true)
+                .show();
     }
 
 
@@ -100,7 +102,6 @@ public class TicketReservation extends Screen {
             if (taskLifeCycle.isCancelled() || taskLifeCycle.isInterrupted()) {
                 return null;
             }
-            TimeUnit.SECONDS.sleep(2);
             i++;
             taskLifeCycle.publish(i);
             return ticketService.searchFlights(airportFromSelector.getValue(), airportToSelector.getValue(), takeOffDateSelector.getValue());
@@ -112,6 +113,7 @@ public class TicketReservation extends Screen {
                     .withCaption("Got flights!")
                     .withType(Notifications.NotificationType.TRAY)
                     .show();
+            flightsDc.setItems(result);
         }
 
         @Override
@@ -135,4 +137,8 @@ public class TicketReservation extends Screen {
         }
     }
 
+    // Simple way
+    private List<Flight> getFlights_(EntityComboBox<Airport> airportFromSelector, EntityComboBox<Airport> airportToSelector, DateField<LocalDate> takeOffDateSelector) {
+        return ticketService.searchFlights(airportFromSelector.getValue(), airportToSelector.getValue(), takeOffDateSelector.getValue());
+    }
 }
