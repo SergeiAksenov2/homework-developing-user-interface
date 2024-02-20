@@ -3,24 +3,30 @@ package com.sample.airtickets.screen.ticketreservation;
 import com.sample.airtickets.app.TicketService;
 import com.sample.airtickets.entity.Airport;
 import com.sample.airtickets.entity.Flight;
+import com.sample.airtickets.entity.Ticket;
+import io.jmix.core.DataManager;
 import io.jmix.core.LoadContext;
-import io.jmix.ui.Dialogs;
-import io.jmix.ui.Notifications;
+import io.jmix.ui.*;
 import io.jmix.ui.action.Action;
-import io.jmix.ui.component.DateField;
-import io.jmix.ui.component.EntityComboBox;
+import io.jmix.ui.app.inputdialog.DialogActions;
+import io.jmix.ui.app.inputdialog.DialogOutcome;
+import io.jmix.ui.app.inputdialog.InputParameter;
+import io.jmix.ui.component.*;
 import io.jmix.ui.executor.BackgroundTask;
 import io.jmix.ui.executor.BackgroundTaskHandler;
 import io.jmix.ui.executor.BackgroundWorker;
 import io.jmix.ui.executor.TaskLifeCycle;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.screen.*;
+import io.jmix.ui.screen.LookupComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static io.jmix.ui.screen.OpenMode.NEW_TAB;
 
 @UiController("TicketReservation")
 @UiDescriptor("ticket-reservation.xml")
@@ -43,6 +49,12 @@ public class TicketReservation extends Screen {
     private BackgroundWorker backgroundWorker;
     @Autowired
     private Dialogs dialogs;
+    @Autowired
+    private UiComponents uiComponents;
+    @Autowired
+    private DataManager dataManager;
+    @Autowired
+    private ScreenBuilders screenBuilders;
 
     @Subscribe("ticketSearch")
     public void onTicketSearch(final Action.ActionPerformedEvent event) {
@@ -140,5 +152,44 @@ public class TicketReservation extends Screen {
     // Simple way
     private List<Flight> getFlights_(EntityComboBox<Airport> airportFromSelector, EntityComboBox<Airport> airportToSelector, DateField<LocalDate> takeOffDateSelector) {
         return ticketService.searchFlights(airportFromSelector.getValue(), airportToSelector.getValue(), takeOffDateSelector.getValue());
+    }
+
+    @Install(to = "ticketReservationTable.actions", subject = "columnGenerator")
+    private Component ticketReservationTableActionsColumnGenerator(final Flight flight) {
+        LinkButton link = uiComponents.create(LinkButton.class);
+        link.setCaption("Reserve");
+        link.addClickListener(e -> {
+            confirmReserve(flight);
+        });
+        return link;
+    }
+
+    private void confirmReserve(Flight flight) {
+        dialogs.createInputDialog(this)
+                .withCaption("Reserve flight")
+                .withParameters(
+                        InputParameter.stringParameter("passengerName").withCaption("Passenger name").withRequired(true),
+                        InputParameter.stringParameter("passportNumber").withCaption("Passport number").withRequired(true),
+                        InputParameter.stringParameter("telephone").withCaption("Telephone").withRequired(true))
+                .withActions(DialogActions.OK_CANCEL)
+                .withCloseListener(closeEvent -> {
+                    if (closeEvent.closedWith(DialogOutcome.OK)) {
+                        String passengerName = closeEvent.getValue("passengerName");
+                        String passportNumber = closeEvent.getValue("passportNumber");
+                        String telephone = closeEvent.getValue("telephone");
+                        Ticket ticket = dataManager.create(Ticket.class);
+                        ticket.setPassengerName(passengerName);
+                        ticket.setPassportNumber(passportNumber);
+                        ticket.setTelephone(telephone);
+                        ticket.setFlight(flight);
+                        ticketService.saveTicket(ticket);
+
+                        screenBuilders.lookup(Ticket.class, this)
+                                .withOpenMode(NEW_TAB)
+                                .build()
+                                .show();
+                    }
+                })
+                .show();
     }
 }

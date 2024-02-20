@@ -10,23 +10,18 @@
                 </query>
             </loader>
         </collection>
-
         <collection id="flightsDc"
                     class="com.sample.airtickets.entity.Flight">
             <loader id="flightsTableDl"/>
         </collection>
-
     </data>
-
     <actions>
         <action id="ticketSearch"/>
     </actions>
-
     <facets>
         <dataLoadCoordinator auto="true"/>
         <screenSettings id="settingsFacet" auto="true"/>
     </facets>
-
     <layout expand="ticketReservationTable" spacing="true">
         <groupBox caption="Filter"
                   orientation="horizontal"
@@ -45,11 +40,11 @@
                        resolution="DAY"/>
             <button id="ticketSearchBtn" caption="Search" action="ticketSearch"/>
         </groupBox>
-
         <table id="ticketReservationTable"
                dataContainer="flightsDc"
                width="100%">
             <columns>
+                <column id="actions" caption="msg://actions.caption"/>
                 <column id="number"/>
                 <column id="fromAirport"/>
                 <column id="toAirport"/>
@@ -57,6 +52,5 @@
                 <column id="takeOffDate"/>
             </columns>
         </table>
-
     </layout>
 </window>

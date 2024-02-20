@@ -8,7 +8,4 @@ import com.sample.airtickets.entity.Ticket;
 @UiDescriptor("ticket-browse.xml")
 @LookupComponent("ticketsTable")
 public class TicketBrowse extends StandardLookup<Ticket> {
-
-    private Flight flight;
-
 }
