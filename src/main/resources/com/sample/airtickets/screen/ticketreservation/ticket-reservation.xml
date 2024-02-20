@@ -38,7 +38,7 @@
                        caption="Take off from"
                        datatype="localDate"
                        resolution="DAY"/>
-            <button id="ticketSearchBtn" caption="Search" action="ticketSearch"/>
+            <button id="ticketSearchBtn" caption="Search" action="ticketSearch" align="BOTTOM_CENTER"/>
         </groupBox>
         <table id="ticketReservationTable"
                dataContainer="flightsDc"

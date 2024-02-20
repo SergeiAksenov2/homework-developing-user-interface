@@ -1,6 +1,5 @@
 package com.sample.airtickets.screen.ticket;
 
-import com.sample.airtickets.entity.Flight;
 import io.jmix.ui.screen.*;
 import com.sample.airtickets.entity.Ticket;
 
